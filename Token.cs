@@ -78,65 +78,7 @@ namespace Scanner
 
         }
 
-        // private bool isFunctionCall(string text)
 
-        int FunctionCallToken(string myToken, string txt, int i)
-        {
-
-            bool error = false;
-            string functionCallstr = myToken;
-            myToken = "";
-            while (txt[i] == ' ') { i++; };
-            if (txt[i] == '(')
-            {
-                functionCallstr += txt[i];
-                Console.WriteLine('(' + ": T_Symbol");
-
-                while (txt[i] != ')')
-                {
-
-                    i++;
-
-                    if (i == txt.Length - 1)
-                    {
-                        break;
-                    }
-                    functionCallstr += txt[i];
-                    myToken += txt[i];
-
-                    if (txt[i] == ',')
-                    {
-
-
-                        Console.WriteLine(myToken.Remove(myToken.Length - 1) + ": T_Identifier");
-                        Console.WriteLine(',' + ": T_Symbol");
-
-                        myToken = "";
-                    }
-
-
-                    if (txt[i] == ';' || txt[i] == '\n')
-                    {
-                        Console.WriteLine("Error Function call not complete");
-                        error = true;
-                        break;
-                    }
-
-
-
-                }
-                if (!error)
-                {
-                    Console.WriteLine(myToken.Remove(myToken.Length - 1) + ": T_Identifier");
-                    Console.WriteLine(')' + ": T_Symbol");
-                    Console.WriteLine(functionCallstr + ": T_FunctionCall");
-
-                }
-            }
-
-
-            return i;
-        }
 
         public void getToken(string txt)
         {
@@ -148,14 +90,15 @@ namespace Scanner
             string historyExpression = "";
             bool expFlag = false;
             bool funFlag = false;
-            states stateHist = states.START;
+            bool stateHist = false;
 
             while (state != states.DONE)
             {
-                stateHist = states.START;
+
                 switch (state)
                 {
                     case states.START:
+
                         if (isSpace(txt[i]))
                         {
                             i++;
@@ -177,27 +120,30 @@ namespace Scanner
                             state = states.ASSIGN;
 
                         }
-                        //function call
-                        else if (txt[i] == '(')
-                        {
-                            Console.WriteLine(txt[i] + ": T_Symbol");
 
-                            if (stateHist == states.IDENTIFIER)
-                                state = states.FUNCTION;
-                            else
-                                i++;
+                        else if (txt[i] == ',')
+                        {
+                            stateHist = false;
+                            Console.WriteLine(txt[i] + ": T_Symbol");
+                            historyExpression += txt[i];
+                            i++;
 
                         }
                         //comment
                         else if (txt[i] == '/' && txt[i + 1] == '*')
                         {
+                            stateHist = false;
                             i = i + 2;
                             state = states.COMMENT;
                         }
+
                         else if (isSymbol(txt[i]))
                         {
+
+
                             if (isBooleanOperator(txt[i], txt[i + 1]))
                             {
+
                                 Console.WriteLine(txt[i] + "" + txt[i + 1] + ": T_BooleanOperator");
                             }
 
@@ -209,6 +155,7 @@ namespace Scanner
                             }
                             else if (isArithmaticOperator(txt[i]))
                             {
+
                                 if (expFlag == true)
                                 { historyExpression += txt[i]; }
                                 Console.WriteLine(txt[i] + ": T_ArithmaticOperator");
@@ -216,6 +163,7 @@ namespace Scanner
 
                             else if (txt[i] == ';')
                             {
+                                stateHist = false;
                                 Console.WriteLine(txt[i] + ": T_semicolon");
                                 if (expFlag == true)
                                 {
@@ -226,6 +174,8 @@ namespace Scanner
                                 }
                                 else if (funFlag == true)
                                 {
+
+
                                     Console.WriteLine(historyIdentifier + historyExpression + ": T_Function_Call:");
 
                                     historyIdentifier = "";
@@ -237,6 +187,7 @@ namespace Scanner
                             }
                             else if (txt[i] == '{' || txt[i] == '}')
                             {
+
                                 Console.WriteLine(txt[i] + ": T_Bracket");
                                 if (funFlag == true)
                                 {
@@ -246,11 +197,13 @@ namespace Scanner
                                     historyIdentifier = "";
                                     historyExpression = "";
                                     funFlag = false;
+
                                 }
                             }
 
                             else if (txt[i] == ')')
                             {
+
                                 Console.WriteLine(txt[i] + ": T_Symbol");
 
                                 if (funFlag == true)
@@ -260,20 +213,43 @@ namespace Scanner
                                 }
                             }
 
+                            //function call
+                            else if (txt[i] == '(')
+                            {
 
+                                Console.WriteLine(txt[i] + ": T_Symbol");
+
+                                if (stateHist == true)
+                                {
+                                    state = states.FUNCTION;
+
+                                    break;
+                                }
+
+
+
+                            }
                             else if (expFlag == true)
                             {
                                 Console.WriteLine(txt[i - 1] + "" + txt[i] + ": T_Symbol");
                             }
 
                             i++;
-                            if (i == txt.Length) state = states.DONE;
-                            else state = states.START;
+                            if (i == txt.Length)
+
+                                state = states.DONE;
+                            else
+                            {
+                                stateHist = false;
+                                state = states.START;
+                            }
+
                         }
 
                         break;
 
                     case states.ASSIGN:
+                        stateHist = false;
                         expFlag = true;
                         historyExpression += txt[i];
                         historyExpression += txt[i + 1];
@@ -282,7 +258,7 @@ namespace Scanner
                         break;
 
                     case states.FUNCTION:
-
+                        stateHist = false;
                         funFlag = true;
                         historyExpression += txt[i];
                         i++;
@@ -290,6 +266,7 @@ namespace Scanner
                         break;
 
                     case states.NUM:
+                        stateHist = false;
                         string float_str = "";
                         while (isDigit(txt[i]))
                         {
@@ -331,7 +308,7 @@ namespace Scanner
                         break;
 
                     case states.IDENTIFIER:
-                        stateHist = states.IDENTIFIER;
+                        stateHist = true;
                         while (isAcceptable(txt[i]))
                         {
                             myToken += txt[i];
