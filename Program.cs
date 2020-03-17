@@ -7,7 +7,7 @@ namespace Scanner
         static void Main(string[] args)
         {
             Token LexicalAnalyser = new Token();
-            string x = "read(a,b,c) ; ; /*input an integer*/ if x > 0 && y < 6 then ";
+            string x = "int main() {int val, counter; read val; counter:= 0;} /*input an integer*/ if x > 0 && y < 6 ";
             LexicalAnalyser.getToken(x);
 
 
