@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,7 +6,7 @@ namespace Scanner
 {
     class Token
     {
-        enum states { START, COMMENT, NUM, IDENTIFIER, ASSIGN, DONE };
+        enum states { START, COMMENT, NUM, IDENTIFIER, ASSIGN, FUNCTION, DONE };
         states state = states.START;
 
         // is digit 
@@ -31,7 +31,7 @@ namespace Scanner
         //is symbol 
         bool isSymbol(char c)
         {
-            return (c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '<' || c == '>' || c == '(' || c == ')' || c == ';' || c == '&' || c == '|');
+            return (c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '<' || c == '>' || c == '(' || c == ',' || c == ')' || c == ';' || c == '&' || c == '|' || c == '{' || c == '}');
         }
         //is whiteSpace
         bool isSpace(char s) { return (s == ' ' || s == '\t' || s == '\n'); }
@@ -43,50 +43,13 @@ namespace Scanner
                                       "repeat", "until", "read", "write",  };
 
 
-        //for dataType
-        private bool isIdFloat(string text)
-        {
-            bool value = false;
-            if (text.Equals("float"))
-                value = true;
-            return value;
-        }
 
-        private bool isIdint(string text)
-        {
-
-            bool value = false;
-            if (text.Equals("int"))
-                value = true;
-            return value;
-        }
-
-
-        private bool isComment(string text)
-        {
-            bool value = false;
-
-            if ((text[0].CompareTo('/') == 0))
-            {
-                //if ((text[1].CompareTo('/') == 0))
-                //{
-                //    error = false;
-                //}
-                if ((text[1].CompareTo('*') == 0) && (text[text.Length - 1].CompareTo('*') == 0) && (text[text.Length].CompareTo('/') == 0))
-                    value = true;
-
-            }
-
-
-
-            return value;
-        }
 
         private bool isConditionOperator(char c, char d)
         {
             bool value = false;
 
-            if (c == '=' || c == '<' || c == '>' || (c == '<' && d == '>'))
+            if ((c == '=' && d == '=') || c == '<' || c == '>' || (c == '<' && d == '>'))
                 value = true;
             return value;
 
@@ -119,9 +82,11 @@ namespace Scanner
 
         int FunctionCallToken(string myToken, string txt, int i)
         {
+
             bool error = false;
             string functionCallstr = myToken;
             myToken = "";
+            while (txt[i] == ' ') { i++; };
             if (txt[i] == '(')
             {
                 functionCallstr += txt[i];
@@ -131,6 +96,11 @@ namespace Scanner
                 {
 
                     i++;
+
+                    if (i == txt.Length - 1)
+                    {
+                        break;
+                    }
                     functionCallstr += txt[i];
                     myToken += txt[i];
 
@@ -151,6 +121,9 @@ namespace Scanner
                         error = true;
                         break;
                     }
+
+
+
                 }
                 if (!error)
                 {
@@ -160,14 +133,21 @@ namespace Scanner
 
                 }
             }
+
+
             return i;
         }
 
         public void getToken(string txt)
         {
+            txt += " ";
             string myToken = "";
             int i = 0;
             bool res_flag = false;
+            string historyIdentifier = "";
+            string historyExpression = "";
+            bool expFlag = false;
+            bool funFlag = false;
 
             while (state != states.DONE)
             {
@@ -188,9 +168,19 @@ namespace Scanner
                         {
                             state = states.IDENTIFIER;
                         }
-                        else if (txt[i] == ':')
+                        //assingment exp
+                        else if (txt[i] == ':' && txt[i + 1] == '=')
                         {
+
                             state = states.ASSIGN;
+
+                        }
+                        //function call
+                        else if (txt[i] == '(')
+                        {
+                            Console.WriteLine(txt[i] + ": T_Symbol");
+                            state = states.FUNCTION;
+
                         }
                         //comment
                         else if (txt[i] == '/' && txt[i + 1] == '*')
@@ -213,33 +203,124 @@ namespace Scanner
                             }
                             else if (isArithmaticOperator(txt[i]))
                             {
+                                if (expFlag == true)
+                                { historyExpression += txt[i]; }
                                 Console.WriteLine(txt[i] + ": T_ArithmaticOperator");
                             }
 
+                            else if (txt[i] == ';')
+                            {
+                                Console.WriteLine(txt[i] + ": T_semicolon");
+                                if (expFlag == true)
+                                {
+                                    Console.WriteLine(historyIdentifier + "" + historyExpression + ": T_Assignment_Statement");
+                                    historyIdentifier = "";
+                                    historyExpression = "";
+                                    expFlag = false;
+                                }
+                                else if (funFlag == true)
+                                {
+                                    Console.WriteLine(historyIdentifier + historyExpression + ": T_Function_Call:");
 
-                            //else if (txt[i] == ';')
-                            //{
-                            //    Console.WriteLine(txt[i] + ": T_semicolon");
-                            //}
+                                    historyIdentifier = "";
+                                    historyExpression = "";
+                                    funFlag = false;
+                                }
+
+
+                            }
+                            else if (txt[i] == '{' || txt[i] == '}')
+                            {
+                                Console.WriteLine(txt[i] + ": T_Bracket");
+                                if (funFlag == true)
+                                {
+
+                                    Console.WriteLine(historyIdentifier + historyExpression + ": T_Function_Call:");
+
+                                    historyIdentifier = "";
+                                    historyExpression = "";
+                                    funFlag = false;
+                                }
+                            }
+
+                            else if (txt[i] == ')')
+                            {
+                                Console.WriteLine(txt[i] + ": T_Symbol");
+
+                                if (funFlag == true)
+                                {
+                                    historyExpression += txt[i];
+
+                                }
+                            }
+
+
+                            else if (expFlag == true)
+                            {
+                                Console.WriteLine(txt[i - 1] + "" + txt[i] + ": T_Symbol");
+                            }
 
                             i++;
                             if (i == txt.Length) state = states.DONE;
                             else state = states.START;
                         }
-                        else state = states.DONE;
+
+                        break;
+
+                    case states.ASSIGN:
+                        expFlag = true;
+                        historyExpression += txt[i];
+                        historyExpression += txt[i + 1];
+                        i++;
+                        state = states.START;
+                        break;
+
+                    case states.FUNCTION:
+                        funFlag = true;
+                        historyExpression += txt[i];
+                        i++;
+                        state = states.START;
                         break;
 
                     case states.NUM:
+                        string float_str = "";
                         while (isDigit(txt[i]))
                         {
+
                             myToken += txt[i];
                             i++;
                         }
-                        //label1.Text += mytoken += " , number \n";
-                        Console.WriteLine(myToken + ": T_Digit");
+                        if (txt[i] == '.')
+                        {
+                            float_str += txt[i];
+                            i++;
+                            while (isDigit(txt[i]))
+                            {
+
+                                float_str += txt[i];
+                                i++;
+
+                            }
+
+                            Console.WriteLine(myToken + "" + float_str + ": T_Float");
+
+
+
+                        }
+                        else
+                        {
+                            //label1.Text += mytoken += " , number \n";
+                            Console.WriteLine(myToken + ": T_Digit");
+
+                        }
+                        if (expFlag == true || funFlag == true)
+                        { historyExpression += myToken; }
+
                         myToken = "";
+                        float_str = "";
                         if (i == txt.Length) state = states.DONE;
                         else state = states.START;
+
                         break;
 
                     case states.IDENTIFIER:
@@ -254,11 +335,19 @@ namespace Scanner
                         }
                         if (res_flag)
                             Console.WriteLine(myToken + ": T_KeyWord");
+
                         else
                             Console.WriteLine(myToken + ": T_Identifier");
-                        //else label1.Text += mytoken += " , identifier \n";
 
-                        i = FunctionCallToken(myToken, txt, i);
+                        if (expFlag == true || funFlag == true)
+                        { historyExpression += myToken; }
+
+                        //else label1.Text += mytoken += " , identifier \n";
+                        if (funFlag != true)
+                            historyIdentifier = myToken;
+
+                        // i = FunctionCallToken(myToken, txt, i);
+
 
                         //label1.Text += mytoken + " , reserved word \n";
 
