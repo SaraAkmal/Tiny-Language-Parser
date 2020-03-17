@@ -148,9 +148,11 @@ namespace Scanner
             string historyExpression = "";
             bool expFlag = false;
             bool funFlag = false;
+            states stateHist = states.START;
 
             while (state != states.DONE)
             {
+                stateHist = states.START;
                 switch (state)
                 {
                     case states.START:
@@ -179,7 +181,11 @@ namespace Scanner
                         else if (txt[i] == '(')
                         {
                             Console.WriteLine(txt[i] + ": T_Symbol");
-                            state = states.FUNCTION;
+
+                            if (stateHist == states.IDENTIFIER)
+                                state = states.FUNCTION;
+                            else
+                                i++;
 
                         }
                         //comment
@@ -276,6 +282,7 @@ namespace Scanner
                         break;
 
                     case states.FUNCTION:
+
                         funFlag = true;
                         historyExpression += txt[i];
                         i++;
@@ -324,6 +331,7 @@ namespace Scanner
                         break;
 
                     case states.IDENTIFIER:
+                        stateHist = states.IDENTIFIER;
                         while (isAcceptable(txt[i]))
                         {
                             myToken += txt[i];
