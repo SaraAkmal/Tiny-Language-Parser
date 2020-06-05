@@ -1,0 +1,26 @@
+C:\Users\sarak\source\repos\Analyser Source (1)\Analyser Source\Analyser Source\Analyzer\bin\Release\Analyzer.exe
+C:\Users\sarak\source\repos\Analyser Source (1)\Analyser Source\Analyser Source\Analyzer\bin\Release\Analyzer.pdb
+C:\Users\sarak\source\repos\Analyser Source (1)\Analyser Source\Analyser Source\Analyzer\obj\Release\Analyzer.csprojAssemblyReference.cache
+C:\Users\sarak\source\repos\Analyser Source (1)\Analyser Source\Analyser Source\Analyzer\obj\Release\Analyzer.Form1.resources
+C:\Users\sarak\source\repos\Analyser Source (1)\Analyser Source\Analyser Source\Analyzer\obj\Release\Analyzer.Properties.Resources.resources
+C:\Users\sarak\source\repos\Analyser Source (1)\Analyser Source\Analyser Source\Analyzer\obj\Release\Analyzer.csproj.GenerateResource.cache
+C:\Users\sarak\source\repos\Analyser Source (1)\Analyser Source\Analyser Source\Analyzer\obj\Release\Analyzer.csproj.CoreCompileInputs.cache
+C:\Users\sarak\source\repos\Analyser Source (1)\Analyser Source\Analyser Source\Analyzer\obj\Release\Analyzer.exe
+C:\Users\sarak\source\repos\Analyser Source (1)\Analyser Source\Analyser Source\Analyzer\obj\Release\Analyzer.pdb
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\bin\Release\Analyzer.exe
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\bin\Release\Analyzer.pdb
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\bin\Release\Microsoft.GLEE.dll
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\bin\Release\Microsoft.GLEE.Drawing.dll
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\bin\Release\Microsoft.GLEE.GraphViewerGDI.dll
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\bin\Release\Microsoft.GLEE.pdb
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\bin\Release\Microsoft.GLEE.Drawing.pdb
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\bin\Release\Microsoft.GLEE.GraphViewerGDI.pdb
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\obj\Release\Analyzer.csprojAssemblyReference.cache
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\obj\Release\dParser.Form1.resources
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\obj\Release\Analyzer.Properties.Form2.resources
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\obj\Release\Analyzer.Properties.Resources.resources
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\obj\Release\Analyzer.csproj.GenerateResource.cache
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\obj\Release\Analyzer.csproj.CoreCompileInputs.cache
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\obj\Release\Analyzer.csproj.CopyComplete
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\obj\Release\Analyzer.exe
+C:\Users\sarak\source\repos\Analyser Source\Analyzer\obj\Release\Analyzer.pdb
